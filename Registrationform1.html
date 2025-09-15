@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Registration Form</title>
+<style>
+  body{
+    font-family:Arial,sans-serif;
+    background:#f2f2f2;
+    padding:20px;}
+  form{
+    background:#fff;
+    padding:20px;
+    border-radius:8px;
+    max-width:500px;
+    margin:auto;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);}
+  label{
+    display:block;
+    margin-top:15px;
+    font-weight:bold;
+}
+  input,select,textarea{width:100%;
+    padding:8px;
+    margin-top:5px;
+    border-radius:4px;
+    border:1px solid #ccc;}
+  .checkbox-group input{
+    width:auto;
+    margin-right:5px;
+  }
+  .msg{
+    display:block;
+    margin-top:5px;
+    font-size:0.9em;
+  }
+  button{
+    margin-top:20px;
+    padding:10px 15px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+  }
+  #register{
+    background:#007bff;
+    color:#fff;
+  }
+  #reset{
+    background:gray;
+    color:#fff;
+    }
+</style>
+</head>
+<body>
+
+<h2>Student Registration Form</h2>
+<form id="registrationForm">
+
+  <label>Full Name
+    <input type="text" id="fullName" placeholder="Enter your full name">
+    <span class="msg" id="nameMsg"></span>
+  </label>
+
+  <label>Email
+    <input type="email" id="email" placeholder="Enter your email">
+    <span class="msg" id="emailMsg"></span>
+  </label>
+
+  <label>Password
+    <input type="password" id="password" placeholder="Enter password">
+    <span class="msg" id="passMsg"></span>
+  </label>
+
+  <label>Confirm Password
+    <input type="password" id="confirmPassword" placeholder="Confirm password">
+    <span class="msg" id="cpassMsg"></span>
+  </label>
+
+  <label>Phone Number
+    <input type="text" id="phone" placeholder="10-digit phone number">
+    <span class="msg" id="phoneMsg"></span>
+  </label>
+
+  <label>Date of Birth
+    <input type="date" id="dob">
+    <span class="msg" id="dobMsg"></span>
+  </label>
+
+  <label>Short Bio
+    <textarea id="bio" maxlength="150" placeholder="Write a short bio"></textarea>
+    <span id="bioCount" class="msg">0/150</span>
+  </label>
+
+  <label>Department
+    <select id="department">
+      <option value="">Select Department</option>
+      <option value="CSE">CSE</option>
+      <option value="ECE">ECE</option>
+      <option value="ME">ME</option>
+    </select>
+    <span class="msg" id="deptMsg"></span>
+  </label>
+
+  <label>Skills (select at least 2)</label>
+  <div class="checkbox-group">
+    <input type="checkbox" name="skill" value="HTML">HTML
+    <input type="checkbox" name="skill" value="CSS">CSS
+    <input type="checkbox" name="skill" value="JS">JS
+    <input type="checkbox" name="skill" value="jQuery">jQuery
+  </div>
+  <span class="msg" id="skillsMsg"></span>
+
+  <label>Gender</label>
+  <input type="radio" name="gender" value="Male"> Male
+  <input type="radio" name="gender" value="Female"> Female
+  <span class="msg" id="genderMsg"></span>
+
+  <label>Upload File (jpg, png, pdf only)
+    <input type="file" id="file">
+    <span class="msg" id="fileMsg"></span>
+  </label>
+
+  <button type="submit" id="register">Register</button>
+  <button type="reset" id="reset">Reset</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function(){
+
+  $("#fullName").blur(function(){
+    let val = $(this).val().trim();
+    if(val.length >= 3){
+      $("#nameMsg").text("Valid Name").css("color","green");
+    } else {
+      $("#nameMsg").text("Invalid Name").css("color","red");
+    }
+  });
+
+  $("#email").blur(function(){
+    let val = $(this).val().trim();
+    let pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if(pattern.test(val)){
+      $("#emailMsg").text("Valid Email").css("color","green");
+    } else {
+      $("#emailMsg").text("Invalid Email").css("color","red");
+    }
+  });
+
+  $("#password").blur(function(){
+    let val = $(this).val().trim();
+    let pattern = /^[a-zA-Z0-9_]{1,18}$/;
+    if(pattern.test(val)){
+      $("#passMsg").text("Valid Password").css("color","green");
+    } else {
+      $("#passMsg").text("Invalid Password (6–18 letters/numbers/_)").css("color","red");
+    }
+  });
+
+  $("#confirmPassword").blur(function(){
+    let pass = $("#password").val().trim();
+    let confirm = $(this).val().trim();
+    if(confirm === ""){
+      $("#cpassMsg").text("Please confirm password").css("color","red");
+    } else if(confirm === pass){
+      $("#cpassMsg").text("Passwords Matched").css("color","green");
+    } else {
+      $("#cpassMsg").text("Passwords are not Match.Please enter valid password").css("color","red");
+    }
+  });
+
+  $("#phone").blur(function(){
+    let val = $(this).val().trim();
+    let pattern = /^[0-9]{10}$/;
+    if(pattern.test(val)){
+      $("#phoneMsg").text("Valid Phone Number").css("color","green");
+    } else {
+      $("#phoneMsg").text("Invalid Phone (10 digits only)").css("color","red");
+    }
+  });
+
+  $("#dob").blur(function(){
+    let dob = $(this).val();
+    if(dob){
+      let today = new Date();
+      let birth = new Date(dob);
+      let age = today.getFullYear() - birth.getFullYear();
+      let m = today.getMonth() - birth.getMonth();
+      if(m<0 || (m===0 && today.getDate()<birth.getDate())) age--;
+      if(age >= 18){
+        $("#dobMsg").text("Valid DOB (Age "+age+")").css("color","green");
+      }
+    } else {
+      $("#dobMsg").text("Please select Date of Birth").css("color","red");
+    }
+  });
+
+  $("#bio").on("input",function(){
+    $("#bioCount").text($(this).val().length + "/150");
+  });
+
+  $("#department").change(function(){
+    if($(this).val() !== ""){
+      $("#deptMsg").text("Department Selected").css("color","green");
+    } else {
+      $("#deptMsg").text("Please select Department").css("color","red");
+    }
+  });
+
+  $("input[name='skill']").change(function(){
+    if($("input[name='skill']:checked").length >= 2){
+      $("#skillsMsg").text("Skills Selected").css("color","green");
+    } else {
+      $("#skillsMsg").text("Select at least 2 skills").css("color","red");
+    }
+  });
+
+  $("input[name='gender']").change(function(){
+    if($("input[name='gender']:checked").length > 0){
+      $("#genderMsg").text("Gender Selected").css("color","green");
+    } else {
+      $("#genderMsg").text("Please select Gender").css("color","red");
+    }
+  });
+
+  $("#file").change(function(){
+    let file = this.files[0];
+    if(file){
+      let ext = file.name.split('.').pop().toLowerCase();
+      if(["jpg","png","pdf"].includes(ext)){
+        $("#fileMsg").text("Valid File Selected").css("color","green");
+      } else {
+        $("#fileMsg").text("Invalid File Type").css("color","red");
+      }
+    } else {
+      $("#fileMsg").text("Please upload a file").css("color","red");
+    }
+  });
+
+});
+</script>
+</body>
+</html>
